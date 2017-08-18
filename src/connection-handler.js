@@ -5,8 +5,6 @@ const { hasCollision, isNotInBounds, newPlayer } = require('./reducers')
 
 const WIDTH = 500
 const HEIGHT = 400
-// const FRAME_RATE = 60 // frames/second
-// const VELOCITY = 100 // pixels/second
 
 module.exports = function connectionHandler(conn) {
 	console.log('Connection established')

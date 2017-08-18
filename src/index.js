@@ -1,4 +1,4 @@
-import { Observable, Scheduler } from 'rxjs/Rx'
+import { BehaviorSubject, Observable, Scheduler } from 'rxjs/Rx'
 import sceneRenderer from './scene-renderer'
 import { steer } from './keycode-handlers'
 
@@ -22,6 +22,8 @@ const velocity$ = gameRate$
 	.pairwise()
 	.map(([prev, current]) => current - prev)
 	.map(ms => VELOCITY * ms / 1000)
+
+const noop = Observable.never()
 const keyCode$ = Observable.fromEvent(document, 'keydown').pluck('keyCode')
 const direction$ = keyCode$.let(steer)
 const vector$ = Observable.combineLatest(
@@ -34,11 +36,22 @@ const vector$ = Observable.combineLatest(
 	})
 ).sample(gameRate$)
 
+const vectorControl$ = new BehaviorSubject(true).switchMap(
+	on => (on ? vector$ : noop)
+)
+
 const socket$ = Observable.webSocket(
 	'ws://' + window.location.hostname + ':3000'
 )
-socket$.subscribe(renderScene)
+socket$
+	.sample(gameRate$)
+	.do(({ alive }) => {
+		if (!alive) {
+			vectorControl$.next(false)
+		}
+	})
+	.subscribe(renderScene)
 
-vector$
+vectorControl$
 	.map(payload => JSON.stringify({ type: 'update-vector', payload }))
 	.subscribe(socket$)
