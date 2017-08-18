@@ -10,22 +10,6 @@ function drawPlayer({ context }, { icon, x, y }) {
 	context.fillText(icon, x - size / 2 - 1, y - size / 2 + 1, size)
 }
 
-function drawTrail({ context }, { color, points }) {
-	context.lineWidth = 4
-	context.lineCap = 'round'
-	context.lineJoin = 'round'
-	context.strokeStyle = color
-	context.beginPath()
-	points.forEach(({ x, y }, i) => {
-		if (i === 0) {
-			context.moveTo(x, y)
-		} else {
-			context.lineTo(x, y)
-		}
-	})
-	context.stroke()
-}
-
 function drawGameOver({ canvas, context }) {
 	context.font = '48px serif'
 	context.textAlign = 'center'
