@@ -39,10 +39,10 @@ const sceneRenderer = canvas => {
 	const helpers = { canvas, context }
 	return function(player) {
 		if (player.alive) {
-			// const head = { ...player, ...player.points[player.points.length - 1] }
+			const head = { ...player, ...player.points[player.points.length - 1] }
 			drawBackground(helpers)
-			// drawTrail(helpers, player)
-			drawPlayer(helpers, player)
+			drawTrail(helpers, player)
+			drawPlayer(helpers, head)
 		} else {
 			drawGameOver(helpers)
 		}

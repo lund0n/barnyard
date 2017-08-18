@@ -39,27 +39,45 @@ const vector$ = Observable.combineLatest(
 const start$ = Observable.of(function() {
 	return {
 		icon: '🐷',
+		color: '#00f',
 		alive: true,
-		x: 400,
-		y: 300,
 		bearing: '?',
+		points: [{ x: 400, y: 300 }],
 	}
 })
 const position$ = vector$.map(
 	({ x, y, bearing }) =>
 		function(state) {
-			return { ...state, x: state.x + x, y: state.y + y, bearing }
+			const lastPos = state.points[state.points.length - 1]
+			const nextPos = { x: lastPos.x + x, y: lastPos.y + y }
+			if (
+				state.points.length === 0 ||
+				(bearing !== state.bearing && bearing !== '?')
+			) {
+				return {
+					...state,
+					bearing,
+					points: state.points.concat(nextPos),
+				}
+			}
+			return {
+				...state,
+				bearing,
+				points: state.points.slice(0, -1).concat(nextPos),
+			}
 		}
 )
 const isNotInBounds = (width, height) => state => {
 	if (state.alive) {
+		const currentPos = state.points[state.points.length - 1]
 		return {
 			...state,
-			alive: !isOutOfBounds(state.x, state.y, width, height),
+			alive: !isOutOfBounds(currentPos.x, currentPos.y, width, height),
 		}
 	}
 	return state
 }
+
 const stateReducers = _.flowRight(isNotInBounds(WIDTH, HEIGHT))
 
 Observable.merge(start$, position$)
