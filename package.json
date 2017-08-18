@@ -35,5 +35,8 @@
       "eslint",
       "git add"
     ]
+  },
+  "dependencies": {
+    "lodash": "^4.17.4"
   }
 }
