@@ -1,4 +1,3 @@
-/* eslint-env node */
 const { resolve } = require('path')
 const webpack = require('webpack')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
@@ -56,9 +55,16 @@ module.exports = (env = {}) => {
 		devServer: {
 			compress: true,
 			contentBase: resolve(root, 'dist'),
-			open: true,
+			open: false,
 			port: 3000,
 			publicPath: '/',
+			proxy: [
+				{
+					path: '/',
+					target: 'ws://localhost:3001/',
+					ws: true,
+				},
+			],
 		},
 	}
 }

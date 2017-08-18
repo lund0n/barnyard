@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "build": "webpack --env.production",
-    "start": "webpack-dev-server",
+    "start": "node server.js",
+    "dev": "concurrently \"PORT=3001 node server.js\" \"webpack-dev-server\"",
     "lint": "eslint .",
     "precommit": "lint-staged"
   },
@@ -37,7 +38,10 @@
     ]
   },
   "dependencies": {
+    "express": "^4.15.4",
     "lodash": "^4.17.4",
-    "random-color": "^1.0.1"
+    "random-color": "^1.0.1",
+    "serve-static": "^1.12.4",
+    "ws": "^3.1.0"
   }
 }

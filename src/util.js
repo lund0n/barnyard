@@ -3,11 +3,11 @@ const HALF_SIZE = PLAYER_SIZE / 2
 
 // Ensures random point is far enough away from edges
 // to keep player from immediately crashing.
-export function randomPoint(max) {
-	return Math.floor(Math.random() * max - 100) + 50
+exports.randomPoint = function randomPoint(max) {
+	return Math.floor(Math.random() * (max - 100)) + 50
 }
 
-export function isCollision(x, y, points) {
+exports.isCollision = function isCollision(x, y, points) {
 	// box1 is size of player.
 	const box1 = {
 		x0: x - HALF_SIZE,
@@ -16,10 +16,11 @@ export function isCollision(x, y, points) {
 		y1: y + HALF_SIZE,
 	}
 	for (let i = 0; i < points.length - 2; i++) {
-		const box2 = {
-			...sortX(points[i].x, points[i + 1].x),
-			...sortY(points[i].y, points[i + 1].y),
-		}
+		const box2 = Object.assign(
+			{},
+			sortX(points[i].x, points[i + 1].x),
+			sortY(points[i].y, points[i + 1].y)
+		)
 		if (collidesWithBox(box1, box2)) {
 			return true
 		}
@@ -27,7 +28,7 @@ export function isCollision(x, y, points) {
 	return false
 }
 
-export function isOutOfBounds(x, y, width, height) {
+exports.isOutOfBounds = function isOutOfBounds(x, y, width, height) {
 	return (
 		x - HALF_SIZE < 0 ||
 		x + HALF_SIZE > width ||
@@ -44,7 +45,7 @@ function sortY(y0, y1) {
 	return y0 < y1 ? { y0, y1 } : { y0: y1, y1: y0 }
 }
 
-export function collidesWithBox(box1, box2) {
+function collidesWithBox(box1, box2) {
 	return (
 		box1.x0 < box2.x1 &&
 		box1.x1 > box2.x0 &&
