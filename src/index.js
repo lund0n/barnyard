@@ -2,7 +2,7 @@ import { Observable, Scheduler } from 'rxjs/Rx'
 import _ from 'lodash'
 import sceneRenderer from './scene-renderer'
 import { steer } from './keycode-handlers'
-import { isOutOfBounds } from './util'
+import { isCollision, isOutOfBounds } from './util'
 
 const WIDTH = 500
 const HEIGHT = 400
@@ -78,7 +78,20 @@ const isNotInBounds = (width, height) => state => {
 	return state
 }
 
-const stateReducers = _.flowRight(isNotInBounds(WIDTH, HEIGHT))
+const hasCollision = state => {
+	if (state.alive) {
+		const currentPos = state.points[state.points.length - 1]
+		return {
+			...state,
+			alive:
+				state.points.length <= 2 ||
+				!isCollision(currentPos.x, currentPos.y, state.points.slice(0, -1)),
+		}
+	}
+	return state
+}
+
+const stateReducers = _.flowRight(hasCollision, isNotInBounds(WIDTH, HEIGHT))
 
 Observable.merge(start$, position$)
 	.scan((state, reducer) => {
