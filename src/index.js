@@ -41,7 +41,9 @@ const vectorControl$ = new BehaviorSubject(true).switchMap(
 )
 
 const socket$ = Observable.webSocket(
-	'ws://' + window.location.hostname + ':3000'
+	process.env.NODE_ENV === 'production'
+		? 'wss://' + window.location.hostname
+		: 'ws://' + window.location.hostname + ':3000'
 )
 socket$
 	.sample(gameRate$)
