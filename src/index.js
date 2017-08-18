@@ -1,8 +1,10 @@
 import { Observable, Scheduler } from 'rxjs/Rx'
 import _ from 'lodash'
+import randomColor from 'random-color'
+import getAnimal from './animals'
 import sceneRenderer from './scene-renderer'
 import { steer } from './keycode-handlers'
-import { isCollision, isOutOfBounds } from './util'
+import { isCollision, isOutOfBounds, randomPoint } from './util'
 
 const WIDTH = 500
 const HEIGHT = 400
@@ -38,11 +40,11 @@ const vector$ = Observable.combineLatest(
 
 const start$ = Observable.of(function() {
 	return {
-		icon: '🐷',
-		color: '#00f',
+		icon: getAnimal(),
+		color: randomColor().hexString(),
 		alive: true,
 		bearing: '?',
-		points: [{ x: 400, y: 300 }],
+		points: [{ x: randomPoint(500), y: randomPoint(400) }],
 	}
 })
 const position$ = vector$.map(

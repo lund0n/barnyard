@@ -1,9 +1,11 @@
 const PLAYER_SIZE = 20
 const HALF_SIZE = PLAYER_SIZE / 2
-export const pixelsPerSecond = v => ms => v * ms / 1000
 
-export const getDiff = obs =>
-	obs.pairwise().map(([prev, current]) => current - prev)
+// Ensures random point is far enough away from edges
+// to keep player from immediately crashing.
+export function randomPoint(max) {
+	return Math.floor(Math.random() * max - 100) + 50
+}
 
 export function isCollision(x, y, points) {
 	// box1 is size of player.
