@@ -95,7 +95,7 @@ const hasCollision = state => {
 
 const stateReducers = _.flowRight(hasCollision, isNotInBounds(WIDTH, HEIGHT))
 
-Observable.merge(start$, position$)
+Observable.concat(start$, position$)
 	.scan((state, reducer) => {
 		return stateReducers(reducer(state))
 	}, {})
